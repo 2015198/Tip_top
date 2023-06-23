@@ -1,7 +1,7 @@
 import React from 'react'
 import PageComponent from '../components/PageComponent'
 import TButton from '../components/core/TButton'
-import { PlusCircleIcon } from '@heroicons/react/24/outline'
+import { PencilIcon, PlusCircleIcon, TrashIcon } from '@heroicons/react/24/outline'
 import data_of_tip_top from "./data_of_tip_top.json"
 
 export default function ViewSite() {
@@ -15,7 +15,7 @@ export default function ViewSite() {
                     <PlusCircleIcon className="h-6 w-6 mr-2" />
                     Add new site
                 </TButton>}>
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-1">
                 <ul role="list" className="divide-y divide-gray-100">
                     {person.map((person) => (
                         <li key={person.email} className="flex justify-between gap-x-6 py-5">
@@ -26,6 +26,10 @@ export default function ViewSite() {
                             </div>
                             <div className="hidden sm:flex sm:flex-col sm:items-end">
                                 <p className="text-sm leading-6 text-gray-900">{person.role}</p>
+                            </div>
+                            <div>
+                                <PencilIcon className="h-6 w-5 mr-2" />
+                                <TrashIcon className="h-6 w-5 mr-2" />
                             </div>
                         </li>
                     ))}

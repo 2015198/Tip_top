@@ -1,7 +1,7 @@
 import React from 'react'
 import PageComponent from '../components/PageComponent'
 import TButton from '../components/core/TButton'
-import { PlusCircleIcon } from '@heroicons/react/24/outline'
+import { PlusCircleIcon, UserIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
 import data_of_tip_top from "./data_of_tip_top.json"
 
 export default function ViewEmployee() {
@@ -26,18 +26,13 @@ export default function ViewEmployee() {
                         </div>
                         <div className="hidden sm:flex sm:flex-col sm:items-end">
                             <p className="text-sm leading-6 text-gray-900">{person.role}</p>
-                            {person.lastSeen ? (
-                                <p className="mt-1 text-xs leading-5 text-gray-500">
-                                    Last seen <time dateTime={person.lastSeenDateTime}>{person.lastSeen}</time>
-                                </p>
-                            ) : (
-                                <div className="mt-1 flex items-center gap-x-1.5">
-                                    <div className="flex-none rounded-full bg-emerald-500/20 p-1">
-                                        <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                                    </div>
-                                    <p className="text-xs leading-5 text-gray-500">Online</p>
-                                </div>
-                            )}
+                            <p className="mt-1 text-xs leading-5 text-gray-500">
+                                Last seen <time dateTime={person.lastSeenDateTime}>{person.lastSeen}</time>
+                            </p>
+                        </div>
+                        <div>
+                            <PencilIcon className="h-6 w-5 mr-2" />
+                            <TrashIcon className="h-6 w-5 mr-2" />
                         </div>
                     </li>
                 ))}

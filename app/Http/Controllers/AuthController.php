@@ -18,7 +18,7 @@ class AuthController extends Controller
         $user = \App\Models\User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => bcrypt($data['name']),
+            'password' => $data['password'],
             'role' => $data['role'],
             'assigned_site_id' => $data['assigned_site_id']
         ]);
@@ -60,5 +60,9 @@ class AuthController extends Controller
          return response([
              'success' => true
          ]);
+    }
+    public function me(Request $request)
+    {
+        return $request->user();
     }
 }
