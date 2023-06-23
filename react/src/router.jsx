@@ -27,7 +27,7 @@ const router = createBrowserRouter([
             element: <ViewSite />,
           },
           {
-            path: "/sites/new",
+            path: "/newsite",
             element: <CreateSite />
           },
           {
@@ -39,7 +39,7 @@ const router = createBrowserRouter([
             element: <CreateEmployee />
           },
           {
-            path: "/new_record",
+            path: "/newrecord",
             element: <CreateRecord />
           },
           {

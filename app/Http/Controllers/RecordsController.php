@@ -36,7 +36,23 @@ class RecordsController extends Controller
      */
     public function store(StorerecordsRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        $record = records::create([
+            'cash_in' => $data['cash_in'],
+            'cash_out' => $data['cash_out'],
+            'deposited' => $data['deposited'],
+            'in_hand_cash' => $data['in_hand_cash'],
+            'remark' => $data['remark'],
+            'record_date' => $data['record_date'],
+            'site_id' => $data['site_id'],
+        ]);
+
+
+        return response([
+            'record' => $record,
+            //TODO
+        ]);
     }
 
     /**

@@ -1,6 +1,43 @@
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
+import { useState } from 'react'
+import axiosClient from '../axios';
 
 export default function CreateSite() {
+
+  const [name, setName] = useState('');
+  const [city, setCity] = useState('');
+  const [site_state, setSiteState] = useState('');
+  const [zip_code, setPincode] = useState('');
+  const [error, setError] = useState({__html: ''}) 
+
+  const onSubmit = (ev) => {
+    ev.preventDefault();
+    setError({ __html: "" });
+
+
+    axiosClient
+      .post("/newsite", {
+        name: name,
+        city: city,
+        site_state: site_state,
+        zip_code:  parseInt(zip_code),
+
+      })
+      .then(({ data }) => {
+        console.log(data)
+        // setCurrentUser(data.user)
+        // setUserToken(data.token)
+      })
+      .catch((error) => {
+        if (error.response) {
+          const finalErrors = Object.values(error.response.data.errors).reduce((accum, next) => [...accum, ...next], [])
+          console.log(finalErrors)
+          setError({ __html: finalErrors.join('<br>') })
+        }
+        console.error(error)
+      });
+  };
+
   return (
     <>
       <header className="bg-white shadow">
@@ -8,7 +45,7 @@ export default function CreateSite() {
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">Create a Site</h1>
         </div>
       </header>
-      <form>
+      <form onSubmit={onSubmit}>
         <div className="container" style={{
           maxWidth: "1000px"
         }} >
@@ -17,15 +54,17 @@ export default function CreateSite() {
               <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
                 <div className="col-span-full">
-                  <label htmlFor="street-address" className="block text-sm font-medium leading-6 text-gray-900">
+                  <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
                     Name of the site
                   </label>
                   <div className="mt-2">
                     <input
                       type="text"
-                      name="street-address"
-                      id="street-address"
-                      autoComplete="street-address"
+                      name="name"
+                      id="name"
+                      required
+                      value={name}
+                      onChange={ev => setName(ev.target.value)}
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
@@ -40,37 +79,43 @@ export default function CreateSite() {
                       type="text"
                       name="city"
                       id="city"
-                      autoComplete="address-level2"
+                      required
+                      value={city}
+                      onChange={ev => setCity(ev.target.value)}
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label htmlFor="region" className="block text-sm font-medium leading-6 text-gray-900">
+                  <label htmlFor="site_state" className="block text-sm font-medium leading-6 text-gray-900">
                     State / Province
                   </label>
                   <div className="mt-2">
                     <input
                       type="text"
-                      name="region"
-                      id="region"
-                      autoComplete="address-level1"
+                      name="site_state"
+                      id="site_state"
+                      required
+                      value={site_state}
+                      onChange={ev => setSiteState(ev.target.value)}
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label htmlFor="postal-code" className="block text-sm font-medium leading-6 text-gray-900">
+                  <label htmlFor="zip_code" className="block text-sm font-medium leading-6 text-gray-900">
                     ZIP / Postal code
                   </label>
                   <div className="mt-2">
                     <input
-                      type="text"
-                      name="postal-code"
-                      id="postal-code"
-                      autoComplete="postal-code"
+                      type="number"
+                      name="zip_code"
+                      id="zip_code"
+                      required
+                      value={zip_code}
+                      onChange={ev => setPincode(ev.target.value)}
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>

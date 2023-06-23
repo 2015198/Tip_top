@@ -18,7 +18,7 @@ class CreateSitesTable extends Migration
             $table->foreignIdFor(\App\Models\User::class, 'user_id');
             $table->string('site_name', 255);
             $table->string('city', 255);
-            $table->string('state', 255);
+            $table->string('site_state', 255);
             $table->integer('zip_code');
         });
     }

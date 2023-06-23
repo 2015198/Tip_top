@@ -15,7 +15,7 @@ class SiteController extends Controller
      */
     public function index()
     {
-        $user = $request->user();
+        $user = $_REQUEST->user();
     }
 
     /**
@@ -36,7 +36,20 @@ class SiteController extends Controller
      */
     public function store(StoresiteRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        $site = site::create([
+            'name' => $data['name'],
+            'city' => $data['city'],
+            'site_state' => $data['site_state'],
+            'zip_code' => $data['zip_code']
+        ]);
+
+
+        return response([
+            'site' => $site,
+            //TODO
+        ]);
     }
 
     /**

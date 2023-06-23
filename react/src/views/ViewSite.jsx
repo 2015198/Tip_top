@@ -11,7 +11,7 @@ export default function ViewSite() {
     return (
         <PageComponent title="View Sites"
             buttons={
-                <TButton color="green" Navigate to="/sites/new">
+                <TButton color="green" Navigate to="/newsite">
                     <PlusCircleIcon className="h-6 w-6 mr-2" />
                     Add new site
                 </TButton>}>

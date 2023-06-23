@@ -8,7 +8,7 @@ export default function Records() {
     return (
         <PageComponent title="Reports"
             buttons={
-                <TButton color="green" to="/new_record">
+                <TButton color="green" to="/newrecord">
                     <PlusCircleIcon className="h-6 w-6 mr-2" />
                     Create new
                 </TButton>}>

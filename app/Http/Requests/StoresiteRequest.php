@@ -16,11 +16,11 @@ class StoresiteRequest extends FormRequest
         return true;
     }
 
-    protected function prepareForValidation(){
-        $this->merge([
-            'user_id' => $this->user()->id
-        ]);
-    }
+    // protected function prepareForValidation(){
+    //     $this->merge([
+    //         'user_id' => $this->user()->id
+    //     ]);
+    // }
 
     /**
      * Get the validation rules that apply to the request.
@@ -32,7 +32,7 @@ class StoresiteRequest extends FormRequest
         return [
             'name' => 'required|string|max:100',
             'city' => 'required|string|max:100',
-            'state' => 'required|string|max:100',
+            'site_state' => 'required|string|max:100',
             'zip_code' => 'required|integer'
         ];
     }

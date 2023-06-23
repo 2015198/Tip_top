@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignupRequest;
+use App\Http\Requests\StoresiteRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
