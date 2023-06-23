@@ -7,6 +7,7 @@ use App\Http\Requests\SignupRequest;
 use App\Http\Requests\StoresiteRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 
 
@@ -18,7 +19,7 @@ class AuthController extends Controller
         $user = \App\Models\User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => $data['password'],
+            'password' => bcrypt($data['password']),
             'role' => $data['role'],
             'assigned_site_id' => $data['assigned_site_id']
         ]);
@@ -56,7 +57,7 @@ class AuthController extends Controller
          $user = Auth::user();
          // Revoke the token that was used to authenticate the current request...
          $user->currentAccessToken()->delete();
- 
+
          return response([
              'success' => true
          ]);
