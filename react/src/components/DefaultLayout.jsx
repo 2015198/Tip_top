@@ -1,31 +1,53 @@
-import { Fragment } from 'react'
+import { Fragment, useEffect } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, UserIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { NavLink, Navigate, Outlet } from 'react-router-dom'
 import { useStateContext } from '../contexts/ContextProvider'
+import axiosClient from '../axios'
 
-const navigation = [
+const navigation_manager = [
     { name: 'Dashboard', to: "/" },
-    { name: 'View Site', to: "/sites" },
-    { name: 'View Employees', to: '/employees' },
-    { name: 'Records', to: '/records'},
-]
+    { name: 'Records', to: '/records' },
+];
+const navigation_admin = [{ name: 'Dashboard', to: "/" },
+{ name: 'View Site', to: "/sites" },
+{ name: 'View Employees', to: '/employees' },
+{ name: 'Records', to: '/records' },
+];
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
 export default function DefaultLayout() {
-    const {currentUser, userToken} = useStateContext();
+    const { currentUser, userToken, setCurrentUser, setUserToken } = useStateContext();
 
-    if(!userToken){
+
+    if (!userToken) {
         return <Navigate to='/login' />
+    }
+
+    if (currentUser.role = "manager") {
+        navigation = navigation_manager;
+    } else {
+        navigation = navigation_admin;
     }
 
     const logout = (ev) => {
         ev.preventDefault();
-        console.log("Logout");
-    }
+        axiosClient.post("/logout").then((res) => {
+            setCurrentUser({});
+            setUserToken(null);
+        });
+    };
+
+    useEffect(() => {
+        axiosClient.get('/me')
+            .then(({ data }) => {
+                setCurrentUser(data)
+            })
+    }, [])
+
     return (
         <>
             <div className="min-h-full">
@@ -44,7 +66,40 @@ export default function DefaultLayout() {
                                         </div>
                                         <div className="hidden md:block">
                                             <div className="ml-10 flex items-baseline space-x-4">
-                                                {navigation.map((item) => (
+                                                {(currentUser.role = "manager") ?
+                                                    (navigation_manager.map((item) => (
+                                                        <NavLink
+                                                            key={item.name}
+                                                            to={item.to}
+                                                            className={({ isActive }) =>
+                                                                classNames(
+                                                                    isActive
+                                                                        ? "bg-gray-900 text-white"
+                                                                        : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                                                                    "px-3 py-2 rounded-md text-sm font-medium"
+                                                                )
+                                                            }
+                                                        >
+                                                            {item.name}
+                                                        </NavLink>
+                                                    ))) :
+                                                    (navigation_admin.map((item) => (
+                                                        <NavLink
+                                                            key={item.name}
+                                                            to={item.to}
+                                                            className={({ isActive }) =>
+                                                                classNames(
+                                                                    isActive
+                                                                        ? "bg-gray-900 text-white"
+                                                                        : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                                                                    "px-3 py-2 rounded-md text-sm font-medium"
+                                                                )
+                                                            }
+                                                        >
+                                                            {item.name}
+                                                        </NavLink>
+                                                    )))}
+                                                {/* {navigation.map((item) => (
                                                     <NavLink
                                                         key={item.name}
                                                         to={item.to}
@@ -59,7 +114,7 @@ export default function DefaultLayout() {
                                                     >
                                                         {item.name}
                                                     </NavLink>
-                                                ))}
+                                                ))} */}
                                             </div>
                                         </div>
                                     </div>
@@ -85,7 +140,8 @@ export default function DefaultLayout() {
                                                     <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                                         <Menu.Item>
                                                             <a
-                                                                href="#"
+                                                                //href="#"
+                                                                onClick={(ev) => logout(ev)}
                                                                 className={'block px-4 py-2 text-sm text-gray-700'}
                                                             >
                                                                 Sign out
@@ -99,7 +155,7 @@ export default function DefaultLayout() {
                                     <div className="-mr-2 flex md:hidden">
                                         {/* Mobile menu button */}
                                         <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                                            <span className="sr-only">Open main menu</span>
+                                            <span className="sr-only">Open main menu  { }</span>
                                             {open ? (
                                                 <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
                                             ) : (
@@ -150,6 +206,7 @@ export default function DefaultLayout() {
                                         <Disclosure.Button
                                             as="a"
                                             href="#"
+                                            onClick={(ev) => logout(ev)}
                                             className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
                                         >
                                             Sign Out

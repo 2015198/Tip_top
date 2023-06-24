@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\records;
 use App\Http\Requests\StorerecordsRequest;
 use App\Http\Requests\UpdaterecordsRequest;
+use Request;
 
 class RecordsController extends Controller
 {
@@ -15,7 +16,8 @@ class RecordsController extends Controller
      */
     public function index()
     {
-        //
+        $data = records::all();
+        return $data;
     }
 
     /**

@@ -7,6 +7,8 @@ const StateContext = createContext({
   userToken: null,
   setCurrentUser: () => { },
   setUserToken: () => { },
+  records: {},
+  setRecords: () => {}
 });
 
 
@@ -19,7 +21,9 @@ export const ContextProvider = ({ children }) => {
   });
   // const [userToken, setUserToken] = useState('');
   const [userToken, _setUserToken] = useState(localStorage.getItem('TOKEN') || '');
-  const [toast, setToast] = useState({message: '', show: false})
+  const [toast, setToast] = useState({ message: '', show: false });
+  const [records, setRecords] = useState('');
+  
 
   const setUserToken = (token) => {
     if (token) {
@@ -28,7 +32,16 @@ export const ContextProvider = ({ children }) => {
       localStorage.removeItem('TOKEN')
     }
     _setUserToken(token);
-  }
+  };
+   
+  // if (currentUser.role = "manager") {
+  //   const setNavigation = [
+  //     { name: 'Dashboard', to: "/" },
+  //     { name: 'View Site', to: "/sites" },
+  //     { name: 'View Employees', to: '/employees' },
+  //     { name: 'Records', to: '/records' },
+  //   ]
+  // };
 
   const showToast = (message) => {
     setToast({ message, show: true })
@@ -44,6 +57,8 @@ export const ContextProvider = ({ children }) => {
         setCurrentUser,
         userToken,
         setUserToken,
+        records,
+        setRecords
         // surveys,
         // questionTypes,
         // toast,
