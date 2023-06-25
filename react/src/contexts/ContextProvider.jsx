@@ -7,8 +7,11 @@ const StateContext = createContext({
   userToken: null,
   setCurrentUser: () => { },
   setUserToken: () => { },
-  records: {},
-  setRecords: () => {}
+  records: [],
+  toast: {
+    message: null,
+    show: false,
+  },
 });
 
 
@@ -34,15 +37,6 @@ export const ContextProvider = ({ children }) => {
     _setUserToken(token);
   };
    
-  // if (currentUser.role = "manager") {
-  //   const setNavigation = [
-  //     { name: 'Dashboard', to: "/" },
-  //     { name: 'View Site', to: "/sites" },
-  //     { name: 'View Employees', to: '/employees' },
-  //     { name: 'Records', to: '/records' },
-  //   ]
-  // };
-
   const showToast = (message) => {
     setToast({ message, show: true })
     setTimeout(() => {
@@ -58,11 +52,10 @@ export const ContextProvider = ({ children }) => {
         userToken,
         setUserToken,
         records,
-        setRecords
         // surveys,
         // questionTypes,
-        // toast,
-        // showToast
+        toast,
+        showToast
       }}
     >
       {children}

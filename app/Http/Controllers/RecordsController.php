@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\RecordsResources;
 use App\Models\records;
 use App\Http\Requests\StorerecordsRequest;
 use App\Http\Requests\UpdaterecordsRequest;
 use Request;
+use Illuminate\Http\Response;
 
 class RecordsController extends Controller
 {
@@ -16,8 +18,13 @@ class RecordsController extends Controller
      */
     public function index()
     {
-        $data = records::all();
-        return $data;
+        // $user = $request->user();
+        //\Symfony\Component\HttpFoundation\Request $request
+        // return RecordsResources::collection(
+        //     records::all()
+        // );
+        $records = records::all();
+        return response()->json($records);
     }
 
     /**
