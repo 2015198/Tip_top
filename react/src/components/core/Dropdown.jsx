@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 
@@ -6,7 +6,9 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Dropdown() {
+export default function Dropdown({ dropdown }) {
+  const [drop_down, setDropdown] = useState('');
+
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
@@ -27,6 +29,7 @@ export default function Dropdown() {
       >
         <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
+            {(Array.from({dropdown}).map((items) => (
             <Menu.Item>
               {({ active }) => (
                 <a
@@ -36,10 +39,11 @@ export default function Dropdown() {
                     'block px-4 py-2 text-sm'
                   )}
                 >
-                  Account settings
+                  {items.name}
                 </a>
               )}
             </Menu.Item>
+            )))}
             <Menu.Item>
               {({ active }) => (
                 <a

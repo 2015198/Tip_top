@@ -6,8 +6,10 @@ use App\Http\Resources\RecordsResources;
 use App\Models\records;
 use App\Http\Requests\StorerecordsRequest;
 use App\Http\Requests\UpdaterecordsRequest;
-use Request;
+
 use Illuminate\Http\Response;
+use Illuminate\Http\Request;
+
 
 class RecordsController extends Controller
 {
@@ -92,6 +94,7 @@ class RecordsController extends Controller
      * @param  \App\Http\Requests\UpdaterecordsRequest  $request
      * @param  \App\Models\records  $records
      * @return \Illuminate\Http\Response
+     * 
      */
     public function update(UpdaterecordsRequest $request, records $records)
     {
@@ -106,6 +109,29 @@ class RecordsController extends Controller
      */
     public function destroy(records $records)
     {
-        //
+        $result = records::where('')->delete();
+        return response()->json($result);
+    }
+    public function getData(Request $request)
+    {
+        $query = $request->input('query');
+
+        $result = records::where('remark', 'like', '%' . $query . '%')->get();
+        return response()->json($result);
+        // return response()->json(['records' => $result]);
+    }
+
+    public function delete(Request $request, $id)
+    {
+        $data = records::find($id);
+
+        if (!$data) {
+            return response()->json(['error' => 'Data not found.'], 404);
+        }
+
+        $data->delete();
+
+        return response()->json(['message' => 'Data deleted successfully']);
+
     }
 }

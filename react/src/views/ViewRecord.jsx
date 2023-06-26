@@ -10,7 +10,10 @@ import Dropdown from '../components/core/Dropdown';
 
 export default function ViewRecord() {
     const [records, setRecords] = useState([]);
-    const { currentUser, userToken, setCurrentUser, setUserToken } = useStateContext();
+    const { currentUser, userToken, setCurrentUser, setUserToken, site } = useStateContext();
+    const [search_remark, setSearchRemark] = useState('');
+    const [search_date, setSearchDate] = useState('');
+    const [error, setError] = useState('');
 
     const getRecords = () => {
         axiosClient.get("/records").then(({ data }) => {
@@ -23,7 +26,23 @@ export default function ViewRecord() {
     }, []);
 
     const onEdit = () => { };
-    const onDelete = () => { };
+    const onDelete = (id) => {
+        console.log(id);
+        // axiosClient.delete(`/records/data/${id}`)
+        //     .then(response => {
+        //         getRecords();
+        //         console.log("Data deleted");
+        //     })
+        //     .catch(error => {
+        //         console.log(error);
+        //     });
+    };
+
+    const onSearch = (ev) => {
+        axiosClient.get(`/records/search?query=${search_remark}`).then(({ data }) => {
+            setRecords(data);
+        })
+    };
 
     return (
         <>
@@ -38,8 +57,9 @@ export default function ViewRecord() {
                                         <input
                                             type="text"
                                             placeholder='Search by remarks'
-                                            name="cash_in"
-                                            id="cash_in"
+                                            name="search_remark"
+                                            id="search_remark"
+                                            onChange={ev => setSearchRemark(ev.target.value)}
                                             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                         />
                                     </div>
@@ -50,14 +70,15 @@ export default function ViewRecord() {
                                         <input
                                             type="date"
                                             placeholder='Search by date'
-                                            name="cash_out"
-                                            id="cash_out"
+                                            name="search_date"
+                                            id="search_date"
+                                            onChange={ev => setSearchDate(ev.target.value)}
                                             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                         />
                                     </div>
                                 </div>
                                 {
-                                    (currentUser.role = "manager") ?
+                                    (currentUser.role == "admin") ?
                                         (<>
                                             <div className='mt-2'><Dropdown /></div>
                                             <div className='mt-2'><Dropdown /></div>
@@ -70,6 +91,7 @@ export default function ViewRecord() {
                                     <div className="sm:col-span-1 mt-2">
                                         <button
                                             type="submit"
+                                            onClick={onSearch}
                                             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                         >
                                             Search
@@ -113,8 +135,8 @@ export default function ViewRecord() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {records.map((items) => (
-                                        <tr className="bg-gray-100 border-b">
+                                    {records && records.map((items) => (
+                                        <tr key={items.id} className="bg-gray-100 border-b">
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{items.id}</td>
                                             <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                                                 {items.cash_in}
@@ -141,10 +163,10 @@ export default function ViewRecord() {
                                                 {items.site_id}
                                             </td>
                                             <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                <button onClick={onEdit}>
+                                                <button onClick={onEdit(items.id)}>
                                                     <PencilIcon className="h-6 w-5 mr-2" />
                                                 </button>
-                                                <button onClick={onDelete}>
+                                                <button onClick={onDelete(items.id)}>
                                                     <TrashIcon className="h-6 w-5 mr-2" />
                                                 </button>
                                             </td>

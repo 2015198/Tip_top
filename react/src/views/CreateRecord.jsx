@@ -1,15 +1,24 @@
 import React, { useState } from 'react'
 import axiosClient from '../axios';
+import Dropdown from '../components/core/Dropdown';
 
 export default function CreateRecord() {
     const [cash_in, setCashIn] = useState('');
     const [cash_out, setCashOut] = useState('');
-    const [deposited, setDeposited]= useState('');
+    const [deposited, setDeposited] = useState('');
     const [in_hand_cash, setInHandCash] = useState('');
     const [remark, setRemark] = useState('');
     const [site_id, setSiteId] = useState('');
     const [record_date, setRecordDate] = useState('');
     const [error, setError] = useState('');
+    const [sites, setSites] = useState('');
+
+    const getSites = () => {
+        axiosClient.get("/sites").then(({ data }) => {
+            setSites(data);
+            console.log(data);
+        });
+    }
 
     const onSubmit = (ev) => {
         ev.preventDefault();
@@ -148,11 +157,13 @@ export default function CreateRecord() {
                                         Select site
                                     </label>
                                     <div className="mt-2">
+                                        <Dropdown dropdown={sites} />
                                         <select
                                             id="site_id"
                                             name="site_id"
                                             required
                                             value={site_id}
+                                            onClick={getSites}
                                             onChange={ev => setSiteId(ev.target.value)}
                                             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                                         >

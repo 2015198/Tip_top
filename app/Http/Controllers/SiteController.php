@@ -6,6 +6,9 @@ use App\Models\site;
 use App\Http\Requests\StoresiteRequest;
 use App\Http\Requests\UpdatesiteRequest;
 
+use Illuminate\Http\Response;
+use Illuminate\Http\Request;
+
 class SiteController extends Controller
 {
     /**
@@ -15,7 +18,8 @@ class SiteController extends Controller
      */
     public function index()
     {
-        $user = $_REQUEST->user();
+        $sites = site::all();
+        return response()->json($sites);
     }
 
     /**
