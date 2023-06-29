@@ -35,7 +35,8 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/newsite', [SiteController::class, 'store']);
 Route::post('/newrecord', [RecordsController::class, 'store']);
 Route::get('/records', [RecordsController::class, 'index']);
-Route::get('/records/search',[RecordsController::class, 'getData']);
+Route::post('/records/search',[RecordsController::class, 'getData']);
 Route::delete('/records/data/{id}', [RecordsController::class,'delete']);
+Route::put('/records/{id}',[RecordsController::class, 'update']);
 
 ROute::get('/sites', [SiteController::class, 'index']);

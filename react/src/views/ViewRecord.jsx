@@ -7,13 +7,18 @@ import axiosClient from '../axios';
 import { useStateContext } from '../contexts/ContextProvider';
 import axios from 'axios';
 import Dropdown from '../components/core/Dropdown';
+import CreateRecord from './CreateRecord';
+import { Navigate, useNavigate } from 'react-router-dom';
+import EditRecord from './EditRecord';
 
-export default function ViewRecord() {
+const ViewRecord = ({ onRecordChange, onChanged }) => {
     const [records, setRecords] = useState([]);
     const { currentUser, userToken, setCurrentUser, setUserToken, site } = useStateContext();
     const [search_remark, setSearchRemark] = useState('');
     const [search_date, setSearchDate] = useState('');
     const [error, setError] = useState('');
+    const [view_record, setViewRecord] = useState();
+    const [$data, setData] = useState();
 
     const getRecords = () => {
         axiosClient.get("/records").then(({ data }) => {
@@ -25,23 +30,34 @@ export default function ViewRecord() {
         getRecords();
     }, []);
 
-    const onEdit = () => { };
+    const onEdit = (id) => {
+        onRecordChange(records[[id]]);
+        onChanged(false);
+    };
     const onDelete = (id) => {
-        console.log(id);
-        // axiosClient.delete(`/records/data/${id}`)
-        //     .then(response => {
-        //         getRecords();
-        //         console.log("Data deleted");
-        //     })
-        //     .catch(error => {
-        //         console.log(error);
-        //     });
+        axiosClient.delete(`/records/data/${id}`)
+            .then(response => {
+                getRecords();
+                console.log("Data deleted");
+            })
+            .catch(error => {
+                console.log(error);
+            });
     };
 
-    const onSearch = (ev) => {
-        axiosClient.get(`/records/search?query=${search_remark}`).then(({ data }) => {
+    const onSearch = () => {
+        console.log(search_date);
+        console.log(search_remark);
+        let $data = {skey:'',sdate:''};
+        if(search_remark){
+            $data.skey = search_remark;
+        }
+        if(search_date){
+            $data.sdate = search_date;
+        }
+        axiosClient.post(`/records/search`, $data).then(({ data }) => {
             setRecords(data);
-        })
+        });
     };
 
     return (
@@ -103,7 +119,10 @@ export default function ViewRecord() {
                                 <thead className="bg-white border-b">
                                     <tr>
                                         <th scope="col" className="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                            ID
+                                            S No.
+                                        </th>
+                                        <th scope="col" className="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                            Record ID
                                         </th>
                                         <th scope="col" className="text-sm font-medium text-gray-900 px-6 py-4 text-left">
                                             Cash in
@@ -135,8 +154,9 @@ export default function ViewRecord() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {records && records.map((items) => (
+                                    {records && records.map((items, index) => (
                                         <tr key={items.id} className="bg-gray-100 border-b">
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{index + 1}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{items.id}</td>
                                             <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                                                 {items.cash_in}
@@ -163,10 +183,10 @@ export default function ViewRecord() {
                                                 {items.site_id}
                                             </td>
                                             <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                <button onClick={onEdit(items.id)}>
+                                                <button onClick={() => onEdit(index)}>
                                                     <PencilIcon className="h-6 w-5 mr-2" />
                                                 </button>
-                                                <button onClick={onDelete(items.id)}>
+                                                <button onClick={() => onDelete(items.id)}>
                                                     <TrashIcon className="h-6 w-5 mr-2" />
                                                 </button>
                                             </td>
@@ -180,5 +200,6 @@ export default function ViewRecord() {
             </div>
         </>
     )
-}
+};
+export default ViewRecord;
 

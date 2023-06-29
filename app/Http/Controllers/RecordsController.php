@@ -96,9 +96,16 @@ class RecordsController extends Controller
      * @return \Illuminate\Http\Response
      * 
      */
-    public function update(UpdaterecordsRequest $request, records $records)
+    public function update(Request $request, $id)
     {
-        //
+        $record = records::find($id);
+
+        if(!$record){
+            return response()->json(['message'=>'record not found'], 404);
+        }
+        $record->update($request->all());
+
+        return response()->json(['message' => 'Record updated successfully']);
     }
 
     /**
@@ -114,11 +121,13 @@ class RecordsController extends Controller
     }
     public function getData(Request $request)
     {
-        $query = $request->input('query');
+        $skey = $request->input("skey", '');
+        $sdate = $request->input('sdate', '');
 
-        $result = records::where('remark', 'like', '%' . $query . '%')->get();
+        $result = records::where('remark', 'like', '%' . $skey . '%')
+            ->whereDate('record_date', $sdate)
+            ->get();
         return response()->json($result);
-        // return response()->json(['records' => $result]);
     }
 
     public function delete(Request $request, $id)

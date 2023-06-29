@@ -8,6 +8,7 @@ import CreateSite from "./views/CreateSite";
 import CreateEmployee from "./views/CreateEmployee";
 import CreateRecord from "./views/CreateRecord";
 import Records from "./views/Records";
+import EditRecord from "./views/EditRecord";
 
 const router = createBrowserRouter([
       {
@@ -38,10 +39,14 @@ const router = createBrowserRouter([
             path: "/signup",
             element: <CreateEmployee />
           },
-          {
-            path: "/newrecord",
-            element: <CreateRecord />
-          },
+          // {
+          //   path: "/newrecord",
+          //   element: <CreateRecord />
+          // },
+          // {
+          //   path: "/editrecord",
+          //   element: <EditRecord />
+          // },
           {
             path: "/records",
             element: <Records />

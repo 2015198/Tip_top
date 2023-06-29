@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 import axiosClient from '../axios';
 import Dropdown from '../components/core/Dropdown';
 import Dropdown1 from '../components/core/Dropdown';
+import { useLocation } from 'react-router-dom';
 
-export default function CreateRecord() {
+const EditRecord = ({ record, onChanged }) => {
     const [cash_in, setCashIn] = useState('');
     const [cash_out, setCashOut] = useState('');
     const [deposited, setDeposited] = useState('');
@@ -13,28 +14,33 @@ export default function CreateRecord() {
     const [error, setError] = useState('');
     const [sites, setSites] = useState('');
     const [selectedValue, setSelectedValue] = useState('');
+    const [view_edit, setViewEdit] = useState();
 
     const handleSelect = (value) => {
         setSelectedValue(value);
     };
 
-    const getSites = () => {
+    const setData = () => {
         axiosClient.get("/sites").then(({ data }) => {
             setSites(data);
         });
-    }
+        setCashIn(record.cash_in);
+        setCashOut(record.cash_out);
+        setDeposited(record.deposited);
+        setInHandCash(record.in_hand_cash);
+        setRemark(record.remark);
+        setSelectedValue(record.site_id);
+        setRecordDate(new Date(record.record_date).toISOString().split('T')[0]);
+    };
 
     useEffect(() => {
-        getSites();
+        setData();
     }, []);
 
-    const onSubmit = (ev) => {
-        ev.preventDefault();
-        setError({ __html: "" });
-
-
+    const onSubmit = () => {
+        console.log(record.id);
         axiosClient
-            .post("/newrecord", {
+            .put(`/records/${record.id}`, {
                 cash_in: parseInt(cash_in),
                 cash_out: parseInt(cash_out),
                 deposited: parseInt(deposited),
@@ -44,18 +50,27 @@ export default function CreateRecord() {
                 site_id: parseInt(selectedValue),
             })
             .then(({ data }) => {
-                // setCurrentUser(data.user)
+                // Handle success response
+                console.log('Record updated successfully');
+                // Update the necessary state or perform any other required actions
             })
             .catch((error) => {
                 if (error.response) {
-                    const finalErrors = Object.values(error.response.data.errors).reduce((accum, next) => [...accum, ...next], [])
-                    console.log(finalErrors)
-                    setError({ __html: finalErrors.join('<br>') })
+                    const finalErrors = Object.values(error.response.data.errors).reduce(
+                        (accum, next) => [...accum, ...next],
+                        []
+                    );
+                    console.log(finalErrors);
+                    setError({ __html: finalErrors.join('<br>') });
                 }
-                console.error(error)
+                console.error(error);
             });
         console.log(sites);
+        onChanged(true);
     };
+    // const onSubmit = (ev) => {
+    //     ev.preventDefault();
+    //     setError({ __html: "" });
 
     return (
         <>
@@ -192,4 +207,6 @@ export default function CreateRecord() {
             </form >
         </>
     )
-}
+};
+
+export default EditRecord;
